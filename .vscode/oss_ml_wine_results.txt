@@ -1,0 +1,19 @@
+OSS ML Assignment Results
+Best model: RandomForest
+Accuracy: 1.0000
+CV accuracy: 0.9791
+
+Classification report:
+              precision    recall  f1-score   support
+
+     class_0       1.00      1.00      1.00        12
+     class_1       1.00      1.00      1.00        14
+     class_2       1.00      1.00      1.00        10
+
+    accuracy                           1.00        36
+   macro avg       1.00      1.00      1.00        36
+weighted avg       1.00      1.00      1.00        36
+
+
+Details:
+Cross-validation accuracy: 0.9791 (+/- 0.0277)
