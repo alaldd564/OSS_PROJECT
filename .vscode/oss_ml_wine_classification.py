@@ -21,7 +21,7 @@ from sklearn.model_selection import (
 )
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-# note: avoid importing loguniform for compatibility across sklearn versions
+# sklearn 버전 호환성을 위해 loguniform import는 사용하지 않는다.
 
 
 @dataclass(frozen=True)
@@ -159,7 +159,7 @@ def main() -> None:
         evaluate_model(name, model, x_train, x_test, y_train, y_test, target_names, cv)
         for name, model in build_models().items()
     ]
-    # Optional heavy experiments (long-running) -------------------------------------------------
+    # 선택적 heavy 실험(오래 걸릴 수 있음) -------------------------------------------------
     if args.heavy:
         start = time.time()
         print("Running heavy experiments: Randomized MLP search and RF GridSearch...")
@@ -168,7 +168,7 @@ def main() -> None:
         rf_search = tune_random_forest(x_train, y_train, cv)
         print(f"RF best params: {rf_search.best_params_}, CV best: {rf_search.best_score_:.4f}")
 
-        # stacking ensemble combining best estimators
+        # 최적 추정기들을 결합한 스태킹 앙상블
         estimators = [
             ("rf", rf_search.best_estimator_),
             ("mlp", mlp_search.best_estimator_),
@@ -192,7 +192,7 @@ def main() -> None:
             )
         )
 
-        # save best stacking model
+        # 최적 스태킹 모델 저장
         model_path = Path("best_model.pkl")
         with model_path.open("wb") as f:
             pickle.dump(stack, f)
@@ -201,7 +201,7 @@ def main() -> None:
         print(f"Heavy experiments completed in {elapsed/60:.2f} minutes")
 
     else:
-        # quick RF GridSearch for demonstration (kept small so default run is fast)
+        # 기본 실행이 빠르게 끝나도록 작은 범위의 RF GridSearch만 수행
         tuned_search = tune_random_forest(x_train, y_train, cv)
         tuned_predictions = tuned_search.best_estimator_.predict(x_test)
         tuned_accuracy = accuracy_score(y_test, tuned_predictions)
@@ -246,7 +246,7 @@ def main() -> None:
     print(f"Best accuracy: {best_result.accuracy:.4f}")
 
     output_path = Path("oss_ml_wine_results.txt")
-    # write JSON results for programmatic consumption and a human-readable text file
+    # 프로그램에서 읽기 쉬운 JSON과 사람이 보기 쉬운 텍스트 결과를 저장한다.
     record = {
         "best_model": best_result.model_name,
         "accuracy": float(best_result.accuracy),
