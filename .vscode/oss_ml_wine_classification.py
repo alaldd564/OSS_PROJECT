@@ -92,9 +92,9 @@ def tune_random_forest(x_train, y_train, cv) -> GridSearchCV:
     search = GridSearchCV(
         estimator=RandomForestClassifier(random_state=42),
         param_grid={
-            "n_estimators": [100, 200, 300],
-            "max_depth": [4, 6, 8, None],
-            "min_samples_split": [2, 4, 6],
+            "n_estimators": [100, 200, 300, 400],
+            "max_depth": [4, 6, 8, 10, None],
+            "min_samples_split": [2, 4, 6, 8],
         },
         scoring="accuracy",
         cv=cv,
@@ -106,12 +106,22 @@ def tune_random_forest(x_train, y_train, cv) -> GridSearchCV:
 
 def randomized_tune_mlp(x_train, y_train, cv, n_iter=50):
     param_dist = {
-        "hidden_layer_sizes": [(200, 200), (300, 200, 100), (512, 256)],
-        "alpha": [1e-4, 1e-3, 1e-2],
-        "learning_rate_init": [1e-4, 1e-3, 1e-2],
+        "hidden_layer_sizes": [
+            (64,),
+            (128,),
+            (128, 64),
+            (200, 200),
+            (300, 200, 100),
+            (512, 256),
+            (512, 512, 256),
+        ],
+        "alpha": [1e-5, 1e-4, 1e-3, 1e-2],
+        "learning_rate_init": [1e-5, 1e-4, 1e-3, 1e-2],
+        "activation": ["relu", "tanh", "logistic"],
+        "solver": ["adam", "sgd"],
     }
     rs = RandomizedSearchCV(
-        estimator=MLPClassifier(max_iter=2000, random_state=42),
+        estimator=MLPClassifier(max_iter=3000, random_state=42),
         param_distributions=param_dist,
         n_iter=n_iter,
         scoring="accuracy",
